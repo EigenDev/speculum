@@ -269,38 +269,28 @@ bool simbi::ndarray<DT>::empty() const
     return sz == 0;
 }
 
+
 template <typename DT>
 std::ostream& operator<< (std::ostream& out, const simbi::ndarray<DT>& v) {
     unsigned counter    = 1;
     const int max_cols  = 10;
     bool end_point      = false;
     int nelems          = v.size();
-    bool nested_array   = false;
-    out << "[";
-    if constexpr(is_ndarray<DT>::value) {
-        nested_array = true;
-        nelems = v[0].size();
+    static bool new_row = false;
+    if (new_row) {
+        out << "\b\b ";
+        new_row = false;
     }
+    out << "[";
     auto idx = 0;
-    int col_idx;
     for (auto i : v) {
         out << i << ", ";
-        col_idx = idx % max_cols;
         if (counter == max_cols) {
-            if (v.ndim() == 1) {
-                if(idx == nelems - 1) {
-                    end_point = true;
-                }
-            } else {
-                if (col_idx == nelems) {
-                    if constexpr(is_ndarray<DT>::value) {
-                        std::cout << col_idx << "\n";
-                    }
-                    end_point = true;
-                }
+            if(idx == nelems - 1) {
+                end_point = true;
             }
             if (!end_point) {
-                if (col_idx == 9) {
+                if (v.ndim() == 1) {
                     out << '\n';
                     out << " ";
                     counter = 0;
@@ -311,8 +301,11 @@ std::ostream& operator<< (std::ostream& out, const simbi::ndarray<DT>& v) {
         counter++;
     }
     out << "\b\b]"; // use two ANSI backspace characters '\b' to overwrite final ", "
-    if(nested_array) {
+    if(v.ndim() > 1) {
         out << "\n";
+        new_row = true;
+    } else {
+        out << "\b\b]"; // use two ANSI backspace characters '\b' to overwrite final ", "
     }
     return out;
 }
