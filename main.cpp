@@ -25,18 +25,23 @@ void cpu_print(T* arr, const int n)
 }
 // Driver code
 int main()
-{
-	simbi::ndarray<simbi::ndarray<simbi::ndarray<double>>> k(2, simbi::ndarray<simbi::ndarray<double>>(10, simbi::ndarray<double>(10, 0)));
-	std::cout << k << "\n";
+{	
+	std::vector<int> vec(10);
+	simbi::ndarray<int> arr1d(10, 0);
+	simbi::ndarray<simbi::ndarray<double>> arr2d(10, simbi::ndarray<double>(10, 0));
+	simbi::ndarray<simbi::ndarray<simbi::ndarray<double>>> arr3d(2, simbi::ndarray<simbi::ndarray<double>>(10, simbi::ndarray<double>(10, 0)));
+	std::cout << arr1d << "\n";
+	std::cout << arr2d << "\n";
+	std::cout << arr3d << "\n";
 
-	const auto n = 1 << 4;
-	auto q = simbi::ndarray<int>(n, 0);
-	q.copyToGpu();
-	int nthreads = 256;
-	int nblocks  = (n + nthreads  - 1) / nthreads;
-	gpu_print<<<nblocks, nthreads>>>(q.dev_data(), q.size());
-	q.copyFromGpu();
-	std::cout << "host values: " << q << "\n";
-	gpuErrchk(gpuDeviceSynchronize());
+	// const auto n = 1 << 4;
+	// auto q = simbi::ndarray<int>(n, 0);
+	// q.copyToGpu();
+	// int nthreads = 256;
+	// int nblocks  = (n + nthreads  - 1) / nthreads;
+	// gpu_print<<<nblocks, nthreads>>>(q.dev_data(), q.size());
+	// q.copyFromGpu();
+	// std::cout << "host values: " << q << "\n";
+	// gpuErrchk(gpuDeviceSynchronize());
 	return 0;
 }

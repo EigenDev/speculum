@@ -10,7 +10,7 @@ simbi::ndarray<DT>::ndarray(std::initializer_list<DT> list)
 
 template<typename DT>
 simbi::ndarray<DT>::ndarray()
-: sz(0), nd_capacity(0), dimensions(0)
+: sz(0), nd_capacity(0), dimensions(1)
 {
 }
 
@@ -43,7 +43,8 @@ simbi::ndarray<DT>::ndarray(size_type size, const DT val)
 template <typename DT>
 simbi::ndarray<DT>::ndarray(const ndarray& rhs) : 
 sz(rhs.sz),
-arr(new DT[rhs.sz])
+arr(new DT[rhs.sz]),
+dimensions(rhs.dimensions)
 {
     // Copy from GPU if data exists there
     copyBetweenGpu(rhs);
@@ -271,13 +272,6 @@ bool simbi::ndarray<DT>::empty() const
     return sz == 0;
 }
 
-
-
-static int nrows   = 0;
-static int naisles = 0;
-static int klast   = 0;
-static int jlast   = 0;
-static int jinit   = 0;
 template <typename DT>
 std::ostream& operator<< (std::ostream& out, const simbi::ndarray<DT>& v) {
     unsigned counter    = 1;
@@ -286,32 +280,32 @@ std::ostream& operator<< (std::ostream& out, const simbi::ndarray<DT>& v) {
     int nelems          = v.size();
     static bool new_row = false;
     static bool new_aisle = false;
+    static int cycle = 0;
+    static const auto nrows = [&]() -> auto {
+        if constexpr(is_2darray<DT>::value) {
+            return v[0].size();
+        }
+        return v.size();
+    }();
     if (new_row) {
         if (!new_aisle) {
             out << "\b\b  ";
         } else {
-            out << "\b\b ";
+            out << "\b\b[";
         }
         new_row = false;
         new_aisle = false;
     }
-    static int ii = 0;
-    static int jj = 0;
-    static int kk = 0;
-    if constexpr(is_2darray<DT>::value) {
-        nrows  = v[0].size();
-    } else if constexpr(is_1darray<DT>::value){
-        nrows   = v.size();
-        naisles = 2;
-    }
+    static bool last_zone = false;
+    static int ii  = 0;
+    static int kk  = 0;
     static int idx = 0;
-    kk = idx / max_cols / nrows;
-    jj = (idx - kk * max_cols * nrows) / max_cols;
-    ii = (idx - kk * nrows * max_cols) % max_cols;
+    static int aisle_count = 1;
     out << "[";
     for (auto i : v) {
         out << i << ", ";
-        ii = idx % max_cols;
+        kk = idx / max_cols / nrows;
+        ii = (idx - kk * nrows * max_cols) % max_cols;
         if (counter == max_cols) {
             if(ii == nelems - 1) {
                 end_point = true;
@@ -328,24 +322,25 @@ std::ostream& operator<< (std::ostream& out, const simbi::ndarray<DT>& v) {
         counter++;
     }
     out << "\b\b]"; // use two ANSI backspace characters '\b' to overwrite final ", "
-    if(v.ndim() > 1) {
-        static bool kend = false;
-        if (kk != klast) {
-            klast = kk;
-            if (kk == 0) {
-                kend = true;
-            }
-        }
-        if (jj != jlast) {
-            jlast = jj;
-            if (jj == 0) {
+    if (idx % max_cols == 0) {
+        new_row = true;
+        if (idx / (nrows * max_cols) == aisle_count) {
+            new_aisle = true;
+            aisle_count++;
+        } else {
+            if (cycle == 0) {
                 out << "\n";
-                new_aisle = true;
+                cycle++;
+            } else {
+                if (idx == cycle * nrows) {
+                    if (idx != 2 * nrows) {
+                        out << "\n\n";
+                    }
+                    cycle++;
+                } else {
+                    out << "\n";
+                }
             }
-        }
-        if (jj != nrows - 1 && !kend){
-            out << "\n";
-            new_row = true;
         }
     }
     return out;
