@@ -1,3 +1,5 @@
+#include <typeinfo>
+
 // Initilizer list constructor
 template <typename DT>
 simbi::ndarray<DT>::ndarray(std::initializer_list<DT> list)
@@ -270,6 +272,12 @@ bool simbi::ndarray<DT>::empty() const
 }
 
 
+
+static int nrows   = 0;
+static int naisles = 0;
+static int klast   = 0;
+static int jlast   = 0;
+static int jinit   = 0;
 template <typename DT>
 std::ostream& operator<< (std::ostream& out, const simbi::ndarray<DT>& v) {
     unsigned counter    = 1;
@@ -277,16 +285,35 @@ std::ostream& operator<< (std::ostream& out, const simbi::ndarray<DT>& v) {
     bool end_point      = false;
     int nelems          = v.size();
     static bool new_row = false;
+    static bool new_aisle = false;
     if (new_row) {
-        out << "\b\b ";
+        if (!new_aisle) {
+            out << "\b\b  ";
+        } else {
+            out << "\b\b ";
+        }
         new_row = false;
+        new_aisle = false;
     }
+    static int ii = 0;
+    static int jj = 0;
+    static int kk = 0;
+    if constexpr(is_2darray<DT>::value) {
+        nrows  = v[0].size();
+    } else if constexpr(is_1darray<DT>::value){
+        nrows   = v.size();
+        naisles = 2;
+    }
+    static int idx = 0;
+    kk = idx / max_cols / nrows;
+    jj = (idx - kk * max_cols * nrows) / max_cols;
+    ii = (idx - kk * nrows * max_cols) % max_cols;
     out << "[";
-    auto idx = 0;
     for (auto i : v) {
         out << i << ", ";
+        ii = idx % max_cols;
         if (counter == max_cols) {
-            if(idx == nelems - 1) {
+            if(ii == nelems - 1) {
                 end_point = true;
             }
             if (!end_point) {
@@ -302,10 +329,24 @@ std::ostream& operator<< (std::ostream& out, const simbi::ndarray<DT>& v) {
     }
     out << "\b\b]"; // use two ANSI backspace characters '\b' to overwrite final ", "
     if(v.ndim() > 1) {
-        out << "\n";
-        new_row = true;
-    } else {
-        out << "\b\b]"; // use two ANSI backspace characters '\b' to overwrite final ", "
+        static bool kend = false;
+        if (kk != klast) {
+            klast = kk;
+            if (kk == 0) {
+                kend = true;
+            }
+        }
+        if (jj != jlast) {
+            jlast = jj;
+            if (jj == 0) {
+                out << "\n";
+                new_aisle = true;
+            }
+        }
+        if (jj != nrows - 1 && !kend){
+            out << "\n";
+            new_row = true;
+        }
     }
     return out;
 }

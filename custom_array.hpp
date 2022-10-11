@@ -235,11 +235,45 @@ struct is_ndarray {
 	static constexpr bool value = false;
 };
 
+template <typename T>
+struct is_2darray {
+	static constexpr bool value = false;
+};
+
+template <typename T>
+struct is_3darray {
+	static constexpr bool value = false;
+};
+
+template <typename T>
+struct is_1darray {
+	static constexpr bool value = false;
+};
+
 template<typename U>
 struct is_ndarray<simbi::ndarray<U>>
 {
 	static constexpr bool value = true;
 };
+
+template<typename U>
+struct is_1darray<simbi::ndarray<U>>
+{
+	static constexpr bool value = true;
+};
+
+template<typename U>
+struct is_2darray<simbi::ndarray<simbi::ndarray<U>>>
+{
+	static constexpr bool value = true;
+};
+
+template<typename U>
+struct is_3darray<simbi::ndarray<simbi::ndarray<simbi::ndarray<U>>>>
+{
+	static constexpr bool value = true;
+};
+
 
 #include "custom_array.tpp"
 #endif 
