@@ -89,10 +89,9 @@ template <typename DT>
 constexpr void speculum::ndarray<DT>::push_back(const DT& data)
 {
     if (sz == nd_capacity) {
-        auto old = arr.get();
+        auto old = arr;
         arr.reset(new DT[nd_capacity = nd_capacity * 2]);
-        std::copy(old, old + sz, arr.get());
-        delete[] old;
+        std::copy(old.get(), old.get() + sz, arr.get());
     } else {
         nd_capacity += sizeof(DT);
     }
