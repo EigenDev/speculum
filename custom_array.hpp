@@ -33,17 +33,17 @@
 #define gpuMemcpyDeviceToDevice cudaMemcpyDeviceToDevice
 #define gpuDeviceSynchronize    cudaDeviceSynchronize
 #else 
-#define gpuMalloc cudaMalloc
-#define gpuMallocManaged cudaMallocManaged
-#define gpuError_t cudaError_t
-#define gpuGetErrorString cudaGetErrorString
-#define gpuSuccess cudaSuccess
-#define gpuFree cudaFree
-#define gpuMemcpy cudaMemcpy
-#define gpuMemcpyHostToDevice cudaMemcpyHostToDevice
-#define gpuMemcpyDeviceToHost cudaMemcpyDeviceToHost
+#define gpuMalloc               cudaMalloc
+#define gpuMallocManaged        cudaMallocManaged
+#define gpuError_t              cudaError_t
+#define gpuGetErrorString       cudaGetErrorString
+#define gpuSuccess              cudaSuccess
+#define gpuFree                 cudaFree
+#define gpuMemcpy               cudaMemcpy
+#define gpuMemcpyHostToDevice   cudaMemcpyHostToDevice
+#define gpuMemcpyDeviceToHost   cudaMemcpyDeviceToHost
 #define gpuMemcpyDeviceToDevice cudaMemcpyDeviceToDevice
-#define gpuDeviceSynchronize  cudaDeviceSynchronize
+#define gpuDeviceSynchronize    cudaDeviceSynchronize
 #endif 
 
 #define GPU_KERNEL   __global__
