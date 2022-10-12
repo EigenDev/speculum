@@ -33,7 +33,15 @@ int main()
 	std::cout << arr1d << "\n";
 	std::cout << arr2d << "\n";
 	std::cout << arr3d << "\n";
-
+	#ifdef __HIPCC__
+    printf("__HIPCC__ is defined\n");
+	#endif
+	#ifdef __CUDACC__
+		printf("__CUDACC__ is defined\n");
+	#endif
+	#ifdef __HCC__
+		printf("__HCC__ is defined\n");
+	#endif
 	// const auto n = 1 << 4;
 	// auto q = simbi::ndarray<int>(n, 0);
 	// q.copyToGpu();

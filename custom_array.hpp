@@ -7,20 +7,32 @@
 #include <algorithm> // for copy
 #include <iterator>  // for ostream_iterator
 #include <memory>
-#ifdef __HIP__
+#ifdef __HIPCC__
 #include "hip/hip_runtime.h"
-#define gpuMalloc hipMalloc
-#define gpuMallocManaged gpuMallocManaged
-#define gpuError_t hi[Error_t
-#define gpuGetErrorString hipGetErrorString
-#define gpuSuccess hipSuccess
-#define gpuFree hipFree
-#define gpuMemcpyHostToDevice hipMemcpyHostToDevice
-#define gpuMemcpuDeviceToHost hipMemcpyDeviceToHost
-#define gpuDeviceSynchronize  hipDeviceSynchronize
+#define gpuMalloc               hipMalloc
+#define gpuMallocManaged        hippMallocManaged
+#define gpuError_t              hipError_t
+#define gpuGetErrorString       hipGetErrorString
+#define gpuSuccess              hipSuccess
+#define gpuFree                 hipFree
+#define gpuMemcpyHostToDevice   hipMemcpyHostToDevice
+#define gpuMemcpuDeviceToHost   hipMemcpyDeviceToHost
+#define gpuDeviceSynchronize    hipDeviceSynchronize
 #define gpuMemcpuDeviceToDevice hipMemcpyDeviceToDevice
 #elif defined(__NVCC__)
 #include "cuda_runtime.h"
+#define gpuMalloc               cudaMalloc
+#define gpuMallocManaged        cudaMallocManaged
+#define gpuError_t              cudaError_t
+#define gpuGetErrorString       cudaGetErrorString
+#define gpuSuccess              cudaSuccess
+#define gpuFree                 cudaFree
+#define gpuMemcpy               cudaMemcpy
+#define gpuMemcpyHostToDevice   cudaMemcpyHostToDevice
+#define gpuMemcpyDeviceToHost   cudaMemcpyDeviceToHost
+#define gpuMemcpyDeviceToDevice cudaMemcpyDeviceToDevice
+#define gpuDeviceSynchronize    cudaDeviceSynchronize
+#else 
 #define gpuMalloc cudaMalloc
 #define gpuMallocManaged cudaMallocManaged
 #define gpuError_t cudaError_t
