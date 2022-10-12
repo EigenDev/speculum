@@ -296,7 +296,6 @@ std::ostream& operator<< (std::ostream& out, const speculum::ndarray<DT>& v) {
         new_row = false;
         new_aisle = false;
     }
-    static bool last_zone = false;
     static int ii  = 0;
     static int kk  = 0;
     static int idx = 0;

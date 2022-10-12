@@ -33,23 +33,14 @@ int main()
 	std::cout << arr1d << "\n";
 	std::cout << arr2d << "\n";
 	std::cout << arr3d << "\n";
-	#ifdef __HIPCC__
-    printf("__HIPCC__ is defined\n");
-	#endif
-	#ifdef __CUDACC__
-		printf("__CUDACC__ is defined\n");
-	#endif
-	#ifdef __HCC__
-		printf("__HCC__ is defined\n");
-	#endif
-	// const auto n = 1 << 4;
-	// auto q = speculum::ndarray<int>(n, 0);
-	// q.copyToGpu();
-	// int nthreads = 256;
-	// int nblocks  = (n + nthreads  - 1) / nthreads;
-	// gpu_print<<<nblocks, nthreads>>>(q.dev_data(), q.size());
-	// q.copyFromGpu();
-	// std::cout << "host values: " << q << "\n";
-	// gpuErrchk(gpuDeviceSynchronize());
+	const auto n = 1 << 4;
+	auto q = speculum::ndarray<int>(n, 0);
+	q.copyToGpu();
+	int nthreads = 256;
+	int nblocks  = (n + nthreads  - 1) / nthreads;
+	gpu_print<<<nblocks, nthreads>>>(q.dev_data(), q.size());
+	q.copyFromGpu();
+	std::cout << "host values: " << q << "\n";
+	gpuErrchk(gpuDeviceSynchronize());
 	return 0;
 }
