@@ -66,7 +66,7 @@ using size_type = size_t;
 
 
 
-namespace simbi
+namespace speculum
 {
 	// Template class to create array of
 	// different data_type
@@ -239,7 +239,7 @@ namespace simbi
 
 	}; // end ndarray class declaration
 
-} // namespace simbi
+} // namespace speculum
 
 // Type trait 
 template <typename T>
@@ -263,25 +263,25 @@ struct is_1darray {
 };
 
 template<typename U>
-struct is_ndarray<simbi::ndarray<U>>
+struct is_ndarray<speculum::ndarray<U>>
 {
 	static constexpr bool value = true;
 };
 
 template<typename U>
-struct is_1darray<simbi::ndarray<U>>
+struct is_1darray<speculum::ndarray<U>>
 {
 	static constexpr bool value = true;
 };
 
 template<typename U>
-struct is_2darray<simbi::ndarray<simbi::ndarray<U>>>
+struct is_2darray<speculum::ndarray<speculum::ndarray<U>>>
 {
 	static constexpr bool value = true;
 };
 
 template<typename U>
-struct is_3darray<simbi::ndarray<simbi::ndarray<simbi::ndarray<U>>>>
+struct is_3darray<speculum::ndarray<speculum::ndarray<speculum::ndarray<U>>>>
 {
 	static constexpr bool value = true;
 };

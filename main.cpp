@@ -27,9 +27,9 @@ void cpu_print(T* arr, const int n)
 int main()
 {	
 	std::vector<int> vec(10);
-	simbi::ndarray<int> arr1d(10, 0);
-	simbi::ndarray<simbi::ndarray<double>> arr2d(10, simbi::ndarray<double>(10, 0));
-	simbi::ndarray<simbi::ndarray<simbi::ndarray<double>>> arr3d(2, simbi::ndarray<simbi::ndarray<double>>(10, simbi::ndarray<double>(10, 0)));
+	speculum::ndarray<int> arr1d(10, 0);
+	speculum::ndarray<speculum::ndarray<double>> arr2d(10, speculum::ndarray<double>(10, 0));
+	speculum::ndarray<speculum::ndarray<speculum::ndarray<double>>> arr3d(2, speculum::ndarray<speculum::ndarray<double>>(10, speculum::ndarray<double>(10, 0)));
 	std::cout << arr1d << "\n";
 	std::cout << arr2d << "\n";
 	std::cout << arr3d << "\n";
@@ -43,7 +43,7 @@ int main()
 		printf("__HCC__ is defined\n");
 	#endif
 	// const auto n = 1 << 4;
-	// auto q = simbi::ndarray<int>(n, 0);
+	// auto q = speculum::ndarray<int>(n, 0);
 	// q.copyToGpu();
 	// int nthreads = 256;
 	// int nblocks  = (n + nthreads  - 1) / nthreads;

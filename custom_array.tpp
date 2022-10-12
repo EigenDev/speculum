@@ -2,21 +2,21 @@
 
 // Initilizer list constructor
 template <typename DT>
-simbi::ndarray<DT>::ndarray(std::initializer_list<DT> list)
-: simbi::ndarray<DT>(list.size())
+speculum::ndarray<DT>::ndarray(std::initializer_list<DT> list)
+: speculum::ndarray<DT>(list.size())
 {
     std::copy(std::begin(list), std::end(list), arr.get());
 };
 
 template<typename DT>
-simbi::ndarray<DT>::ndarray()
+speculum::ndarray<DT>::ndarray()
 : sz(0), nd_capacity(0), dimensions(1)
 {
 }
 
 // Zero-initialize the array with defined size
 template <typename DT>
-simbi::ndarray<DT>::ndarray(size_type size)
+speculum::ndarray<DT>::ndarray(size_type size)
 : sz(size), nd_capacity(size * sizeof(DT)), dimensions(1)
 {
     arr.reset(new DT[nd_capacity]); // zero initialize all members.
@@ -26,7 +26,7 @@ simbi::ndarray<DT>::ndarray(size_type size)
 
 
 template <typename DT>
-simbi::ndarray<DT>::ndarray(size_type size, const DT val)
+speculum::ndarray<DT>::ndarray(size_type size, const DT val)
 : sz(size), nd_capacity(size * sizeof(DT)), dimensions(1)
 {
     arr.reset(new DT[nd_capacity]); 
@@ -41,7 +41,7 @@ simbi::ndarray<DT>::ndarray(size_type size, const DT val)
 
 // Copy-constructor for array
 template <typename DT>
-simbi::ndarray<DT>::ndarray(const ndarray& rhs) : 
+speculum::ndarray<DT>::ndarray(const ndarray& rhs) : 
 sz(rhs.sz),
 arr(new DT[rhs.sz]),
 dimensions(rhs.dimensions)
@@ -58,7 +58,7 @@ dimensions(rhs.dimensions)
 
 // Copy the arrays and deallocate the RHS
 template <typename DT>
-simbi::ndarray<DT>& simbi::ndarray<DT>::ndarray::operator=(ndarray other)
+speculum::ndarray<DT>& speculum::ndarray<DT>::ndarray::operator=(ndarray other)
 {
     other.swap(*this);
     return *this;
@@ -66,9 +66,9 @@ simbi::ndarray<DT>& simbi::ndarray<DT>::ndarray::operator=(ndarray other)
 
 // Copy the arrays and deallocate the RHS
 template <typename DT>
-constexpr simbi::ndarray<DT>& simbi::ndarray<DT>::ndarray::operator+=(const ndarray& other)
+constexpr speculum::ndarray<DT>& speculum::ndarray<DT>::ndarray::operator+=(const ndarray& other)
 {
-    simbi::ndarray<DT> newArray(sz + other.sz);
+    speculum::ndarray<DT> newArray(sz + other.sz);
     std::copy(this->arr.get(), this->arr.get() + this->sz, newArray.arr.get());
     std::copy(other.arr.get(), other.arr.get() + other.sz, newArray.arr.get() + this->sz);
     newArray.swap(*this);
@@ -76,7 +76,7 @@ constexpr simbi::ndarray<DT>& simbi::ndarray<DT>::ndarray::operator+=(const ndar
 };
 
 template <typename DT>
-void simbi::ndarray<DT>::swap(ndarray& other)
+void speculum::ndarray<DT>::swap(ndarray& other)
 {
     std::swap(arr, other.arr);
     std::swap(sz, other.sz);
@@ -86,7 +86,7 @@ void simbi::ndarray<DT>::swap(ndarray& other)
 // Template class to insert the element
 // in array
 template <typename DT>
-constexpr void simbi::ndarray<DT>::push_back(const DT& data)
+constexpr void speculum::ndarray<DT>::push_back(const DT& data)
 {
     if (sz == nd_capacity) {
         auto old = arr.get();
@@ -102,7 +102,7 @@ constexpr void simbi::ndarray<DT>::push_back(const DT& data)
 // Template class to return the popped element
 // in array
 template <typename DT>
-constexpr void simbi::ndarray<DT>::pop_back()
+constexpr void speculum::ndarray<DT>::pop_back()
 {
     // Manually call destructor of DT if non-trivial type
     if (!empty()) {
@@ -112,7 +112,7 @@ constexpr void simbi::ndarray<DT>::pop_back()
 }
 
 template<typename DT>
-constexpr void simbi::ndarray<DT>::resize(size_type new_size) { 
+constexpr void speculum::ndarray<DT>::resize(size_type new_size) { 
     if (new_size > sz) {
         arr.reset(new DT[new_size * sizeof(DT)]);
     }
@@ -121,7 +121,7 @@ constexpr void simbi::ndarray<DT>::resize(size_type new_size) {
 }
 
 template<typename DT>
-constexpr void simbi::ndarray<DT>::resize(size_type new_size, const DT new_value) { 
+constexpr void speculum::ndarray<DT>::resize(size_type new_size, const DT new_value) { 
     if (new_size > sz) {
         arr.reset(new DT[new_size * sizeof(DT)]);
     }
@@ -136,7 +136,7 @@ constexpr void simbi::ndarray<DT>::resize(size_type new_size, const DT new_value
 // Template class to return the size of
 // array
 template <typename DT>
-constexpr size_type simbi::ndarray<DT>::size() const
+constexpr size_type speculum::ndarray<DT>::size() const
 {
     return sz;
 }
@@ -144,7 +144,7 @@ constexpr size_type simbi::ndarray<DT>::size() const
 // Template class to return the size of
 // array
 template <typename DT>
-constexpr size_type simbi::ndarray<DT>::capacity() const
+constexpr size_type speculum::ndarray<DT>::capacity() const
 {
     return nd_capacity;
 }
@@ -152,7 +152,7 @@ constexpr size_type simbi::ndarray<DT>::capacity() const
 // Template class to return the size of
 // array
 template <typename DT>
-constexpr size_type simbi::ndarray<DT>::ndim() const
+constexpr size_type speculum::ndarray<DT>::ndim() const
 {
     return dimensions;
 }
@@ -160,7 +160,7 @@ constexpr size_type simbi::ndarray<DT>::ndim() const
 // array at given index
 template <typename DT>
 template <typename IndexType>
-constexpr DT& simbi::ndarray<DT>::operator[](IndexType index)
+constexpr DT& speculum::ndarray<DT>::operator[](IndexType index)
 {
     // if given index is greater than the
     // size of array print Error
@@ -176,7 +176,7 @@ constexpr DT& simbi::ndarray<DT>::operator[](IndexType index)
 // array at given index
 template <typename DT>
 template <typename IndexType>
-constexpr DT simbi::ndarray<DT>::operator[](IndexType index) const
+constexpr DT speculum::ndarray<DT>::operator[](IndexType index) const
 {
     // if given index is greater than the
     // size of array print Error
@@ -189,7 +189,7 @@ constexpr DT simbi::ndarray<DT>::operator[](IndexType index) const
 }
 
 template <typename DT>
-constexpr simbi::ndarray<DT>& simbi::ndarray<DT>::operator*(const double scale_factor) {
+constexpr speculum::ndarray<DT>& speculum::ndarray<DT>::operator*(const double scale_factor) {
     for (size_t i = 0; i < sz; i++)
     {
         arr[i] *= scale_factor;
@@ -198,7 +198,7 @@ constexpr simbi::ndarray<DT>& simbi::ndarray<DT>::operator*(const double scale_f
 };
 
 template <typename DT>
-constexpr simbi::ndarray<DT>& simbi::ndarray<DT>::operator*=(const double scale_factor) {
+constexpr speculum::ndarray<DT>& speculum::ndarray<DT>::operator*=(const double scale_factor) {
     for (size_t i = 0; i < sz; i++)
     {
         arr[i] *= scale_factor;
@@ -207,7 +207,7 @@ constexpr simbi::ndarray<DT>& simbi::ndarray<DT>::operator*=(const double scale_
 };
 
 template <typename DT>
-constexpr simbi::ndarray<DT>& simbi::ndarray<DT>::operator/(const double scale_factor) {
+constexpr speculum::ndarray<DT>& speculum::ndarray<DT>::operator/(const double scale_factor) {
     for (size_t i = 0; i < sz; i++)
     {
         arr[i] /= scale_factor;
@@ -216,7 +216,7 @@ constexpr simbi::ndarray<DT>& simbi::ndarray<DT>::operator/(const double scale_f
 };
 
 template <typename DT>
-constexpr simbi::ndarray<DT>& simbi::ndarray<DT>::operator/=(const double scale_factor) {
+constexpr speculum::ndarray<DT>& speculum::ndarray<DT>::operator/=(const double scale_factor) {
     for (size_t i = 0; i < sz; i++)
     {
         arr[i] /= scale_factor;
@@ -225,55 +225,55 @@ constexpr simbi::ndarray<DT>& simbi::ndarray<DT>::operator/=(const double scale_
 };
 // Template class to return begin iterator
 template <typename DT>
-typename simbi::ndarray<DT>::iterator
-                    simbi::ndarray<DT>::begin() const
+typename speculum::ndarray<DT>::iterator
+                    speculum::ndarray<DT>::begin() const
 {
     return iterator(arr.get());
 }
 
 // Template class to return end iterator
 template <typename DT>
-typename simbi::ndarray<DT>::iterator
-                        simbi::ndarray<DT>::end() const
+typename speculum::ndarray<DT>::iterator
+                        speculum::ndarray<DT>::end() const
 {
     return iterator(arr.get() + sz);
 }
 
 template<typename DT>
-DT simbi::ndarray<DT>::back() const {
+DT speculum::ndarray<DT>::back() const {
     return (*(end() - 1));
 }
 
 template<typename DT>
-DT& simbi::ndarray<DT>::back() {
+DT& speculum::ndarray<DT>::back() {
     return (*(end() - 1));
 }
 
 template<typename DT>
-DT& simbi::ndarray<DT>::front() {
+DT& speculum::ndarray<DT>::front() {
     return (*(begin()));
 }
 
 
 template<typename DT>
-DT simbi::ndarray<DT>::front() const {
+DT speculum::ndarray<DT>::front() const {
     return (*(begin()));
 }
 
 
 template <typename DT>
-simbi::ndarray<DT>::~ndarray()
+speculum::ndarray<DT>::~ndarray()
 {
 }
 
 template <typename DT>
-bool simbi::ndarray<DT>::empty() const
+bool speculum::ndarray<DT>::empty() const
 {
     return sz == 0;
 }
 
 template <typename DT>
-std::ostream& operator<< (std::ostream& out, const simbi::ndarray<DT>& v) {
+std::ostream& operator<< (std::ostream& out, const speculum::ndarray<DT>& v) {
     unsigned counter    = 1;
     const int max_cols  = 10;
     bool end_point      = false;
@@ -347,7 +347,7 @@ std::ostream& operator<< (std::ostream& out, const simbi::ndarray<DT>& v) {
 }
 
 template<typename DT>
-void simbi::ndarray<DT>::copyToGpu() {
+void speculum::ndarray<DT>::copyToGpu() {
     if (arr) {
         if (!dev_arr) {
             dev_arr.reset((DT*)myGpuMalloc(nd_capacity));
@@ -357,30 +357,30 @@ void simbi::ndarray<DT>::copyToGpu() {
 }
 
 template<typename DT>
-void simbi::ndarray<DT>::copyFromGpu() {
+void speculum::ndarray<DT>::copyFromGpu() {
     if (dev_arr) {
         gpuMemcpy(arr.get(), dev_arr.get(), nd_capacity, gpuMemcpyDeviceToHost);
     }
 }
 
 template<typename DT>
-void simbi::ndarray<DT>::copyBetweenGpu(const ndarray &rhs) {
+void speculum::ndarray<DT>::copyBetweenGpu(const ndarray &rhs) {
     if (dev_arr) {
         gpuMemcpy(dev_arr.get(), rhs.dev_arr.get(), rhs.nd_capacity, gpuMemcpyDeviceToDevice);
     }
 }
 
 template<typename DT>
-DT* simbi::ndarray<DT>::host_data(){
+DT* speculum::ndarray<DT>::host_data(){
     return arr.get();
 };
 template<typename DT>
-DT* simbi::ndarray<DT>::dev_data(){
+DT* speculum::ndarray<DT>::dev_data(){
     return dev_arr.get();
 };
 
 template<typename DT>
-DT* simbi::ndarray<DT>::data(){
+DT* speculum::ndarray<DT>::data(){
     if constexpr(BuildPlatform == Platform::GPU) {
         return dev_arr.get();
     } else {
